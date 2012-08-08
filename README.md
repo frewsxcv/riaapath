@@ -9,6 +9,7 @@
 * Python 2 and modules below
  * psycopg2 (`pip install psycopg2`)
  * neo4j-embedded (`pip install neo4j-embedded`)
+ * jpype
 
 ### Set up
 * Set up a MusicBrainz database
