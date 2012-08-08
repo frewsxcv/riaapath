@@ -35,6 +35,6 @@ with Neo4j() as neo4j:
 if not os.path.isdir("dist"):
     os.mkdir("dist")
 
-with open("dist/riaalabels.json", "w") as output:
+with open("dist/riaalabels.js", "w") as output:
     log("Saving generated tree to riaalabels.json")
     output.write(json.dumps(tree))
