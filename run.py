@@ -31,6 +31,9 @@ with Neo4j() as neo4j:
     tree = neo4j.generate_riaa_tree()
     log("Disconnecting and removing temporary Neo4j database")
 
-with open("riaalabels.json", "w") as output:
+if not os.path.isdir("dist"):
+    os.mkdir("dist")
+
+with open("dist/riaalabels.json", "w") as output:
     log("Saving generated tree to riaalabels.json")
     output.write(json.dumps(tree))
