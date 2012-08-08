@@ -2,6 +2,7 @@
 
 import json
 import sys
+import os
 
 from lib.mbz import MusicBrainz
 from lib.neo import Neo4j
