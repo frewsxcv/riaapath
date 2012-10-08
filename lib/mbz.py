@@ -17,8 +17,6 @@ along with RIAAPath.  If not, see <http://www.gnu.org/licenses/>.
 
 import psycopg2
 
-psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
-
 DB_CONFIG = {
     "database": "musicbrainz_db",
     "user": "musicbrainz",
@@ -28,6 +26,7 @@ DB_CONFIG = {
 
 class MusicBrainz():
     def __init__(self):
+        psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
         self._conn = psycopg2.connect(**DB_CONFIG)
 
     def disconnect(self):
