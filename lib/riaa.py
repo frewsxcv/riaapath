@@ -16,7 +16,7 @@ along with RIAAPath.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 """
-RIAA affiliated labels and their MusicBrainz ID 
+RIAA affiliated labels and their MusicBrainz ID
 Here's how each entry should look:
 
 "<musicbrainz id of label>":
@@ -63,7 +63,7 @@ riaa_labels = {
 
     # 500 YEARS LATER not in musicbrainz, but 300 years later is. RIAA typo?
 
-     # 604 Records
+    # 604 Records
     "03fe64fe-8260-456a-a26e-fcb3ac79423f":
         "http:#riaa.com/aboutus.php?content_selector=aboutus_members&f=#",
 
