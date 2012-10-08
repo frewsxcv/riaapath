@@ -1,5 +1,22 @@
 import psycopg2
 
+"""
+This file is part of RIAAPath.
+
+RIAAPath is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+RIAAPath is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with RIAAPath.  If not, see <http://www.gnu.org/licenses/>.
+"""
+
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
 
 DB_CONFIG = {
@@ -9,19 +26,21 @@ DB_CONFIG = {
 }
 
 class MusicBrainz():
-    def __enter__(self):
+    def __init__(self):
         self._conn = psycopg2.connect(**DB_CONFIG)
-        return self
 
-    def __exit__(self, type, value, traceback):
+    def disconnect(self):
         self._conn.close()
     
     def get_labels(self):
-        keys = ("id", "mbid", "name")
+        keys = ("id", "mbid", "name", "country")
         query = """
-            SELECT label.id, label.gid, label_name.name
-            FROM label, label_name
-            WHERE label.name = label_name.id"""
+            SELECT label.id, label.gid, label_name.name, country.iso_code
+                FROM label LEFT OUTER JOIN country ON 
+                        label.country = country.id,
+                     label_name
+	            WHERE label.name = label_name.id;
+            """
         curr = self._conn.cursor()
         curr.execute(query)
         labels = (dict(zip(keys, l)) for l in curr.fetchall())

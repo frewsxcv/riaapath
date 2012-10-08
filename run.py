@@ -1,40 +1,44 @@
 #!/usr/bin/env python
 
+"""
+This file is part of RIAAPath.
+
+RIAAPath is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+RIAAPath is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with RIAAPath.  If not, see <http://www.gnu.org/licenses/>.
+"""
+
 import json
 import sys
 import os
 
 from lib.mbz import MusicBrainz
-from lib.neo import Neo4j
+from lib.graph import Graph
 
-if sys.argv[-1] in ("-q", "--quiet"):
-    def log(msg):
-        pass
-else:
-    def log(msg):
-        sys.stdout.write(msg + "\n")
 
-log("Connecting to MusicBrainz database")
-with MusicBrainz() as mbz:
-    log("Retrieving labels from MusicBrainz database")
+if __name__ == "__main__":
+    mbz = MusicBrainz()
     labels = mbz.get_labels()
-    log("Retrieving label relationships from MusicBrainz database")
     relations = mbz.get_relations()
-    log("Disconnecting from MusicBrainz database")
+    mbz.disconnect()
 
-log("Creating temporary Neo4j database")
-with Neo4j() as neo4j:
-    log("Adding labels to Neo4j database")
-    neo4j.add_labels(labels)
-    log("Adding label relationships to Neo4j database")
-    neo4j.add_relations(relations)
-    log("Generating tree from populated Neo4j database")
-    tree = neo4j.generate_riaa_tree()
-    log("Disconnecting and removing temporary Neo4j database")
+    graph = Graph()
+    graph.add_labels(labels)
+    graph.add_relations(relations)
+    tree = graph.generate_riaa_tree()
+    print(tree)
 
-if not os.path.isdir("dist"):
-    os.mkdir("dist")
+    if not os.path.isdir("dist"):
+        os.mkdir("dist")
 
-with open("dist/riaalabels.js", "w") as output:
-    log("Saving generated tree to riaalabels.json")
-    output.write(json.dumps(tree))
+    with open("dist/riaalabels.js", "w") as output:
+        output.write(json.dumps(tree))
