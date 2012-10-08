@@ -33,8 +33,15 @@ class MusicBrainz():
     def disconnect(self):
         self._conn.close()
 
+    def _query_db(self, fields, query):
+        curr = self._conn.cursor()
+        curr.execute(query)
+        results = (dict(zip(fields, r)) for r in curr.fetchall())
+        curr.close()
+        return results
+
     def get_labels(self):
-        keys = ("id", "mbid", "name", "country")
+        fields = ("id", "mbid", "name", "country")
         query = """
             SELECT label.id, label.gid, label_name.name, country.iso_code
                 FROM label LEFT OUTER JOIN country ON
@@ -42,21 +49,13 @@ class MusicBrainz():
                      label_name
                 WHERE label.name = label_name.id;
             """
-        curr = self._conn.cursor()
-        curr.execute(query)
-        labels = (dict(zip(keys, l)) for l in curr.fetchall())
-        curr.close()
-        return labels
+        return self._query_db(fields, query)
 
     def get_relations(self):
-        keys = ("rel_type", "label_id0", "label_id1")
+        fields = ("rel_type", "label_id0", "label_id1")
         query = """
             SELECT link_type.name, l_l_l.entity0, l_l_l.entity1
             FROM l_label_label AS l_l_l, link, link_type
             WHERE l_l_l.link = link.id
                 AND link.link_type = link_type.id"""
-        curr = self._conn.cursor()
-        curr.execute(query)
-        relations = (dict(zip(keys, r)) for r in curr.fetchall())
-        curr.close()
-        return relations
+        return self._query_db(fields, query)
