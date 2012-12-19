@@ -35,7 +35,6 @@ if __name__ == "__main__":
     graph.add_labels(labels)
     graph.add_relations(relations)
     tree = graph.generate_riaa_tree()
-    print(tree)
 
     if not os.path.isdir("dist"):
         os.mkdir("dist")
