@@ -60,18 +60,18 @@ class Graph():
         tree = {}
         for label_id in self.db:
             path = self.get_riaa_path(label_id)
+            # If the label is RIAA affiliated, a label will exist in `path`
             if len(path) > 0:
+                # TODO: Don't include 'mbid' as a property of each value in the object
+                label = self.db.node[label_id]
                 label_mbid = self.db.node[label_id]["mbid"]
-                if len(path) == 1:
-                    parent_label_id = path[0]
-                    parent_label = self.db.node[parent_label_id]
-                else:
+                if len(path) > 1:
                     parent_label_id = path[1]
                     parent_label = self.db.node[parent_label_id]
                     rel = self.db.edge[label_id][parent_label_id][0]["rel"]
-                    parent_label["rel"] = rel
-                parent_label["parent"] = parent_label["mbid"]
-                tree[label_mbid] = parent_label
+                    label["rel"] = rel
+                    label["parent"] = parent_label["mbid"]
+                tree[label_mbid] = label
         return tree
 
     def get_riaa_path(self, label_id):
