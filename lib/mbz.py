@@ -46,8 +46,7 @@ class MusicBrainz():
                 FROM label LEFT OUTER JOIN country ON
                         label.country = country.id,
                      label_name
-                WHERE label.name = label_name.id;
-            """
+                WHERE label.name = label_name.id;"""
         return self._query_db(fields, query)
 
     def get_relations(self):
