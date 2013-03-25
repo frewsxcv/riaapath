@@ -4,19 +4,17 @@ import json
 import sys
 import os
 
-from lib.mbz import MusicBrainz
+from lib.mbz import mbz_conn
 from lib.graph import Graph
 
 
 if __name__ == "__main__":
-    mbz = MusicBrainz()
-    labels = mbz.get_labels()
-    relations = mbz.get_relations()
-    mbz.disconnect()
-
     graph = Graph()
-    graph.add_labels(labels)
-    graph.add_relations(relations)
+
+    with mbz_conn() as mbz:
+        graph.add_labels(mbz.labels)
+        graph.add_relations(mbz.relations)
+
     tree = graph.generate_riaa_tree()
 
     if not os.path.isdir("dist"):

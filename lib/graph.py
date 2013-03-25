@@ -17,24 +17,20 @@ class Graph():
 
     def add_labels(self, labels):
         for label in labels:
-            label_mbid = label["mbid"]
-            label_id = label["id"]
-            attrs = {"name": label["name"], "mbid": label_mbid}
-            if label["country"]:
-                attrs["country"] = label["country"]
-            if label_mbid in riaa_labels:
-                attrs["riaa"] = riaa_labels[label_mbid]
-            self.db.add_node(label_id, attrs)
+            attrs = {"name": label.name, "mbid": label.mbid}
+            if label.country:
+                attrs["country"] = label.country
+            if label.mbid in riaa_labels:
+                attrs["riaa"] = riaa_labels[label.mbid]
+            self.db.add_node(label.id, attrs)
 
     def add_relations(self, relations):
-        """
-        """
         for relation in relations:
             self.add_relation(relation)
 
     def add_relation(self, relation):
-        labels = (relation["label_id0"], relation["label_id1"])
-        rel_type = relation["rel_type"]
+        labels = (relation.id1, relation.id2)
+        rel_type = relation.type
         rel_rule = self.rel_rules[rel_type]
         self.db.add_edge(labels[rel_rule[0]], labels[rel_rule[1]],
                 attr_dict={"rel": rel_rule[2]})
